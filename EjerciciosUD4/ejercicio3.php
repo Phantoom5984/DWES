@@ -26,12 +26,24 @@ $nombre=$_GET['nombre'];
 echo "Nombre: ".strtoupper($nombre)."<br>";
 $apellidos=$_GET['apellidos'];
 echo "Apellidos: ".strtoupper($apellidos)."<br>";
+$usuario=$_GET['usuario'];
+echo "Nombre de usuario: ".strtoupper($usuario)."<br>";
+$password=$_GET['password'];
+echo "Password: ".strtoupper($password)."<br>";
 $sexo=$_GET['sexo'];
 echo "Sexo: ".strtoupper($sexo)."<br>";
 $correo=$_GET['correo'];
 echo "Correo: ".strtoupper($correo)."<br>";
 $provincia=$_GET['provincia'];
 echo "Provincia: ".strtoupper($provincia)."<br>";
+$horario = $_GET['horario'];
+foreach ($horario as $h)
+echo strtoupper($h)."<br>";
+$conocer = $_GET['conocer'];
+foreach ($conocer as $c)
+echo strtoupper($c)."<br>";
+$comentario=$_GET['comentario'];
+echo "Comentario: ".strtoupper($comentario)."<br>";
 $checbox1=isset($_GET['checbox1']) ? "Sí" : "No";
 echo strtoupper($checbox1)."<br>";
 $checbox2=isset($_GET['checbox2']) ? "Sí" : "No";
@@ -46,9 +58,11 @@ echo strtoupper($checbox2)."<br>";
 </head>
 <body>
     <h1>Sergio Salvago Medina - Formulario de registro</h1>
-    <form action="ejercicio1.php" method="GET">
+    <form action="ejercicio3.php" method="get">
     Nombre: <input type="text" name="nombre" size="50"><br><br>
     Apellidos: <input type="text" name="apellidos" size="200"><br><br>
+    Nombre de usuario: <input type="text" name="usuario" size="5"><br><br>
+    Password: <input type="password" name="password" size="15"><br><br>
         Sexo: <input type="radio" name="sexo" value="H">hombre
         <input type="radio" name="sexo" value="M">mujer<br><br>
         Correo: <input type="text" name="correo" size="250"><br><br>
@@ -57,8 +71,19 @@ echo strtoupper($checbox2)."<br>";
         <option>Alicante</option>
         <option>Castellón</option>
         </select><br><br>
+        Horario de contacto: <select multiple size="2" name="horario[]">
+        <option SELECTED>De 8 a 14 horas</option>
+        <option SELECTED>De 14 a 18 horas</option>
+        <option>De 18 a 21 horas</option>
+        </select><br><br>
+        ¿Cómo nos ha conocido?<br><input type="checkbox" name="conocer[]" value="Un amigo">Un amigo
+        <input type="checkbox" name="conocer[]" value="Web">Web
+        <input type="checkbox" name="conocer[]" value="Prensa">Prensa
+        <input type="checkbox" name="conocer[]" value="Otros">Otros<br><br>
+        <textarea cols="60" rows="6" name="comentario"></textarea><br><br>
         <input type="checkbox" name="checbox1" CHECKED> Deseo recibir información sobre novedades y ofertas<br><br>
         <input type="checkbox" name="checbox2"> Declaro haber leído y aceptar las condiciones generales del programa y la normativa sobre protección de datos<br><br>
+        <input type="reset" name="limpiar" value="Limpiar">
         <input type="submit" name="enviar" value="Enviar">
     </form>
 </body>
