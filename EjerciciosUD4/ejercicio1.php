@@ -23,18 +23,18 @@ Además, tienes que tener en cuenta los siguientes requisitos:
 • Cada campo tiene que llevar una etiqueta asociada para la descripción del mismo.
  */
 $nombre=$_GET['nombre'];
-echo "Nombre: ".strtoupper($nombre)."<br>";
+echo "<b>Nombre: </b>".strtoupper($nombre)."<br>";
 $apellidos=$_GET['apellidos'];
-echo "Apellidos: ".strtoupper($apellidos)."<br>";
+echo "<b>Apellidos: </b>".strtoupper($apellidos)."<br>";
 $sexo=$_GET['sexo'];
-echo "Sexo: ".strtoupper($sexo)."<br>";
+echo "<b>Sexo: </b>".strtoupper($sexo)."<br>";
 $correo=$_GET['correo'];
-echo "Correo: ".strtoupper($correo)."<br>";
+echo "<b>Correo: </b>".strtoupper($correo)."<br>";
 $provincia=$_GET['provincia'];
-echo "Provincia: ".strtoupper($provincia)."<br>";
-$checbox1=isset($_GET['checbox1']) ? "Sí" : "No";
+echo "<b>Provincia: </b>".strtoupper($provincia)."<br>";
+$checbox1=isset($_GET['checbox1']) ? "Ha seleccionado recibir ofertas" : "No ha seleccionado recibir ofertas";
 echo strtoupper($checbox1)."<br>";
-$checbox2=isset($_GET['checbox2']) ? "Sí" : "No";
+$checbox2=isset($_GET['checbox2']) ? "Ha seleccionado aceptar las condiciones" : "No ha seleccionado aceptar las condiciones";
 echo strtoupper($checbox2)."<br>";
 ?>
 <!DOCTYPE html>
