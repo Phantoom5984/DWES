@@ -85,9 +85,9 @@ echo "<b>Comentario: </b>".strtoupper($comentario)."<br>";
         <option>Alicante</option>
         <option>Castellón</option>
         </select><br><br>
-        Horario de contacto: <select multiple size="2" name="horario[]">
-        <option SELECTED>De 8 a 14 horas</option>
-        <option SELECTED>De 14 a 18 horas</option>
+        Horario de contacto: <select multiple size="3" name="horario[]">
+        <option>De 8 a 14 horas</option>
+        <option>De 14 a 18 horas</option>
         <option>De 18 a 21 horas</option>
         </select><br><br>
         ¿Cómo nos ha conocido?<br><input type="checkbox" name="conocer[]" value="Un amigo">Un amigo
