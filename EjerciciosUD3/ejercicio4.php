@@ -6,17 +6,10 @@
 $horas=ReadLine("Dime las horas: ");
 $minutos=ReadLine("Dime los minutos: ");
 $segundos=ReadLine("Dime los segundos: "); // Con estas líneas de código recojo las horas, los minutos y los segundos.
-while($segundos>59){
-    $segundos-=60;
-    $minutos++;
-}while($minutos>59){
-    $minutos-=60;
-    $horas++;
-    // Con estas líneas de código hago unos whiles para calcular los segundos, los minutos y las horas.
-}if($horas>23){
-    echo ("Te has pasado de horas");
+if($horas>0 && $horas<23 && $minutos>0 && $minutos<60 && $segundos>0 && $segundos<60){
+    echo ("Has puesto la hora bien");
 }
 else{
-    echo ($horas."h ".$minutos."m ".$segundos."s");
+    echo ("La has puesto mal");
 }
 ?>

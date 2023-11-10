@@ -14,6 +14,7 @@ for ($i=1;$i<=8;$i++) {
         $matriz2[$i][$j]=0;
     }
 }
+
 $barco4_1=$matriz[1][1]=1;
 $barco4_2=$matriz[1][2]=1;
 $barco4_3=$matriz[1][3]=1;
@@ -36,8 +37,15 @@ $barco2_6=$matriz[8][5]=1;
 $barco1_1=$matriz[8][8]=1;
 $barco1_2=$matriz[6][8]=1;
 $barco1_3=$matriz[1][8]=1;
-$barco1_4=$matriz[6][8]=1;
+$barco1_4=$matriz[5][5]=1;
 
+$long=count($matriz);
+for ($i=1;$i<=$long;$i++) { 
+    for ($j=1;$j<=$long;$j++) { 
+        printf ("%d\t",$matriz[$i][$j]);
+    }
+    echo ("\n");
+}
 $numero=0;
 $contador=1;
 $fil=ReadLine("Dime una fila: ");
@@ -79,7 +87,6 @@ if($contador<=20){  //Se ha pasado el número de intentos.
         echo ("Noob");
     }
 /*
-Intento de hacer pidiendo coordenadas.
 rellenarBarco($matriz);
 function rellenarBarco($matriz){
     $long=count($matriz);
@@ -124,13 +131,13 @@ for($l=0;$l<1;$l++){
 }
 if($barco3=="horizontal"){
     $barco3I=ReadLine("Dime la fila: ");
-    while($barco3I==$barco4I || $barco4I+1!=0){
+    while($barco3I==$barco4I && $matriz[$barco4I+1]==0){
         $barco3I=ReadLine("Esa fila ya está ocupada: ");
     }
     $colum=0;
     for($k=0;$k<3;$k++){
         $barco3J=ReadLine("Dime las columnas (que no se repitan y sean contiguas): ");
-        while($barco3J!=$barco4J || $barco4J+1!=0){
+        while($barco3J==$barco4J && $matriz[$barco4J+1]==0){
             $barco3J=ReadLine("Esa columna ya está ocupada: ");
         }
         while($barco3J==$colum){
@@ -141,13 +148,13 @@ if($barco3=="horizontal"){
     }
 }else if($barco3=="vertical"){
     $barco3J=ReadLine("Dime la columna: ");
-    while($barco3J==$barco4J || $barco4J+1!=0){
+    while($barco3J==$barco4J && $matriz[$barco4J+1]==0){
         $barco3J=ReadLine("Esa columna ya está ocupada: ");
     }
     $fil=0;
     for($k=0;$k<3;$k++){
         $barco3I=ReadLine("Dime las filas (que no se repitan y sean contiguas): ");
-        while($barco3I==$barco4I || $barco4I+1!=0){
+        while($barco3I==$barco4I && $matriz[$barco4I+1]==0){
             $barco3I=ReadLine("Esa fila ya está ocupada: ");
         }
         while($barco3I==$fil){
