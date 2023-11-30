@@ -6,7 +6,7 @@
 $trabajadores=ReadLine("Dime cuántos trabajadores hay: ");
 $vec=[];
 for ($i=0;$i<$trabajadores;$i++) { 
-    $nom=ReadLine("Dime su nombre: ");
+    $nom=ReadLine("Dime su nombre: ");                                  
     $sal=ReadLine("Dime su salario: ");
     $vec[$nom]=$sal;
     // Con estas líneas de código hago un for para rellenar el vector con los nombres y salarios pedidos.
