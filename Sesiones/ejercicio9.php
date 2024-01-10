@@ -1,71 +1,85 @@
 <?php
 /**
- * @author ADrián Oriola Martos
- * 9. Usa el formulario del ejercicio 9 de Cookies con selección de cálculo de media, mediana y
- * moda de modo que uses la sesión para mostrar los números, la media, mediana y/o moda
- * seleccionadas actualmente y además muestre los números, la media, mediana y moda de la
- * selección anterior.
+ * @author Sergio Salvago Medina
  */
-session_start(); //iniciamos la sesión
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+/*9.Usa el formulario del ejercicio 9 de Cookies con selección de cálculo de media, mediana y moda de modo que uses la sesión para mostrar los números,
+la media, mediana y/o moda seleccionadas actualmente y además muestre los números, la media, mediana y moda de la selección anterior.*/
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    session_start();
 
-    $zonaHoraria = $_POST["zona_horaria"];
-
-    if (empty($zonaHoraria)) {
-        echo "<p>Por favor, selecciona una zona horaria.</p>";
+    if (empty($_SESSION['numeros']) && empty($_SESSION['estadisticas'])) {
+        $_SESSION['numeros'] = $_POST['numeros'];
+        $_SESSION['estadisticas'] = $_POST['estadisticas'];
+       
     } else {
-        /*Esta función coge la fecha y hora actual dependiendo de que zona horaria hemos seleccionado*/
-        date_default_timezone_set($zonaHoraria);
-        /*Le damos formato al date para que solo nos printee Horas(H), Minutos(i) y Segundo(s)*/
-        $horaActual = date("H:i:s");
-        $_SESSION['horaActual'] = $horaActual;
+        $_SESSION['numeros2'] = $_SESSION['numeros'];
+        $_SESSION['numeros'] = $_POST['numeros'];
 
-        echo "<p>La hora actual en la zona horaria $zonaHoraria es: $horaActual</p>";
+        $_SESSION['estadisticas2'] = $_SESSION['estadisticas'];
+        $_SESSION['estadisticas'] = $_POST['estadisticas'];
+
+        echo "El dato introducido anteriormente es: ", $_SESSION['numeros2']. "-".implode(",",$_SESSION['estadisticas2'])."<br>";
+        
     }
+    if (isset($_POST['numeros'])) {
+        $numeros = explode(',', $_POST['numeros']);
+        $numeros = array_map('trim', $numeros);
+        $numeros = array_filter($numeros, 'is_numeric');
+        
+        if (!empty($numeros)) {
+            $estadisticas = $_POST['estadisticas'] ?? [];
+            $resultados = [];
 
-    if (empty($_SESSION['zona_horaria']) && empty($_SESSION['horaActual'])) {
-        $_SESSION['zona_horaria'] = $_POST['zona_horaria'];
-        $_SESSION['horaActual'] = $_POST['horaActual'];
+            if (in_array('media', $estadisticas)) {
+                $media = array_sum($numeros) / count($numeros);
+                $resultados['Media'] = $media;
+            }
 
+            if (in_array('moda', $estadisticas)) {
+                $conteo = array_count_values($numeros);
+                $moda = array_search(max($conteo), $conteo);
+                $resultados['Moda'] = $moda;
+            }
+
+            if (in_array('mediana', $estadisticas)) {
+                sort($numeros);
+                $longitud = count($numeros);
+                $mediana = $longitud % 2 !== 0 ? $numeros[floor($longitud / 2)] : ($numeros[$longitud / 2 - 1] + $numeros[$longitud / 2]) / 2;
+                $resultados['Mediana'] = $mediana;
+            }
+
+            if (!empty($resultados)) {
+                foreach ($resultados as $estadistica => $valor) {
+                    echo "$estadistica: $valor ";
+                }
+            } else {
+                echo "<p>No se seleccionó ninguna estadística.</p>";
+            }
+        } else {
+            echo "<p>No se ingresaron números válidos.</p>";
+        }
     } else {
-        $_SESSION['zona_horariaAntigua'] = $_SESSION['zona_horaria'];
-        $_SESSION['zona_horaria'] = $_POST['zona_horaria'];
-
-        $_SESSION['horaActualAntigua'] = $_SESSION['horaActual'];
-        $_SESSION['horaActual'] = $_POST['horaActual'];
-
-        echo "El dato introducido anteriormente es: ", $_SESSION['zona_horariaAntigua'] . "-" . $_SESSION['horaActualAntigua'];
-
+        echo "<p>No se proporcionaron números.</p>";
     }
 }
 ?>
 <!DOCTYPE html>
 <html>
-
 <head>
-    <title>Adrián Oriola</title>
+    <title>Ejercicio 8</title>
 </head>
-
 <body>
-    <h1>La hora en distintas zonas horarias</h1>
-    <form method="post" action="ejercicio9.php" enctype="multipart/form-data">
-        <label for="zona_horaria">Selecciona una zona horaria:</label>
-        <select name="zona_horaria" required>
-            <?php
-            /*Con el DateTimeZone::listIdentifiers genera una lista de todas las zonas horarias del mundo
-            Aquí he pedido ayuda a un amigo que trabaja con PHP porque no tenía ni idea de como hacer esto*/
-            $zonasHorarias = DateTimeZone::listIdentifiers();
-            foreach ($zonasHorarias as $zona) {
-                echo "<option value=\"$zona\">$zona</option>";
-            }
-            /*Preguntar a Silvia por este método de agregar código PHP en mitad de un HTML*/
-            ?>
-        </select><br>
+    <h2>Calculadora de Estadísticas</h2>
+    <form method="post">
+        <label for="numeros">Introduce números separados por comas:</label><br>
+        <textarea name="numeros" rows="4" cols="50"></textarea><br><br>
 
-        <input type="submit" value="Obtener Hora"><br><br>
+        <label for="estadisticas">Selecciona las estadísticas a calcular:</label><br>
+        <input type="checkbox" name="estadisticas[]" value="media"> Media<br>
+        <input type="checkbox" name="estadisticas[]" value="moda"> Moda<br>
+        <input type="checkbox" name="estadisticas[]" value="mediana"> Mediana<br><br>
 
+        <input type="submit" value="Calcular">
     </form>
-
 </body>
-
 </html>

@@ -1,61 +1,46 @@
 <?php
 /**
- * @author Adrián Oriola Martos
- * 6. Usa el formulario del ejercicio 6 de Cookies con la tabla de multiplicar de modo que uses la
- * sesión para mostrar el multiplicando, el multiplicador y la tabla actuales y además muestre el
- * multiplicando, el multiplicador y la tabla de la ejecución anterior.
+ * @author Sergio Salvago Medina
  */
-// Obtener el número ingresado por el usuario
-$numero = $_POST["numero"];
+ /*6. Usa el formulario del ejercicio 6 de Cookies con la tabla de multiplicar de modo que uses la sesión para mostrar el multiplicando,
+ el multiplicador y la tabla actuales y además muestre el multiplicando, el multiplicador y la tabla de la ejecución anterior.*/
+ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
+    session_start();
 
-// Validar que el número sea un entero positivo
-if (is_numeric($numero) && $numero > 0) {
-    echo "<h2>Tabla de multiplicar del número $numero</h2>";
-    echo "<ul>";
+    if (empty($_SESSION['numero'])) {
+        $_SESSION['numero'] = $_POST['numero'];
+       
+    } else {
+        $_SESSION['numero2'] = $_SESSION['numero'];
+        $_SESSION['numero'] = $_POST['numero'];
 
-    // Generar la tabla de multiplicar
-    for ($i = 1; $i <= 10; $i++) {
-        $resultado = $numero * $i;
-        echo "<li>$numero x $i = $resultado</li>";
+        echo "El dato introducido anteriormente es: ", $_SESSION['numero2']."<br>";
+        
     }
-
-    echo "</ul>";
-} else {
-    echo "<p>Por favor, ingrese un número entero positivo.</p>";
-}
-?>
-<!DOCTYPE html>
-<html lang="es">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Adrián Oriola</title>
-</head>
-
-<body>
-    <h1>Generador de Tabla de Multiplicar</h1>
-
-    <form method="post" action="ejercicio6.php" enctype="multipart/form-data">
-        <label for="numero">Ingrese un número:</label>
-        <input type="text" name="numero" id="numero" required>
-        <button type="submit">Generar Tabla de Multiplicar</button>
-    </form>
-    <?php
-        session_start(); //iniciamos la sesión
-
-        if (empty($_SESSION['numero'])) {
-            $_SESSION['numero'] = $_POST['numero'];
-           
-        } else {
-            $_SESSION['numeroAntiguo'] = $_SESSION['numero'];
-            $_SESSION['numero'] = $_POST['numero'];
-
-            echo "El dato introducido anteriormente es: ", $_SESSION['numeroAntiguo'];
-            
+    if (isset($_POST["enviar"])) {
+        $numeros=[];
+        $numero=$_POST["numero"];
+        for($i=1;$i<=10;$i++){
+            array_push($numeros,$numero*$i);
         }
-        // Cambia "cliente nuevo" por el valor introducido en el Text
-        ?>
-</body>
-
-</html>
+        echo implode(",", $numeros);
+    }
+    }
+    ?>
+    
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Ejercicio 6</title>
+    </head>
+    <body>
+        <form method="post">
+            <label for="numero">Introduce el numero:</label><br><br>
+            <input type="number" name="numero" ><br><br>
+            <input type="submit" name="enviar" value="Enviar"><br><br>
+    
+        </form>
+    </body>
+    </html>

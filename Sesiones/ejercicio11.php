@@ -1,134 +1,105 @@
 <?php
 /**
- * @author Adrián Oriola Martos
- * 
- * 11. Aplica la sesión en el ejercicio 23 de la UD5 para poder pasar los datos en lugar de construir la
- * url para enviarlos.
+ * @author Sergio Salvago Medina
  */
-    session_start(); //iniciamos la sesión
-    $nombre=isset($_POST["nombre"]) ? $_POST["nombre"] : null;
-    $estudios=isset($_POST["estudios"]) ? $_POST["estudios"] : null;
-    $situacion=isset($_POST["situacion"]) ? $_POST["situacion"] : [];
-    $hobbies = isset($_POST['hobbies']) ? $_POST['hobbies'] : [];
-    $otroHobby = isset($_POST['otro_hobby']) ? $_POST['otro_hobby'] : '';
-    $apellidos=isset($_POST["apellidos"]) ?  $_POST["apellidos"] : null;
-    $errores = array();
-    function validaRequerido($valor){
-        return trim($valor) !=="";
+/*11. Aplica la sesión en el ejercicio 23 de la UD5 para poder pasar los datos en lugar de construir la url para enviarlos.*/
+session_start();
+$errores = false;
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if (empty($_POST["nombre"]) || empty($_POST["email"])) {
+        echo "<p>Error: Nombre y email son campos obligatorios.</p>";
+        $errores = true;
     }
-    
-    function validarCheckbox($valor){
-        return is_array($valor) && count($valor) >0;
+}
+
+if (!$errores && $_SERVER["REQUEST_METHOD"] == "POST") {
+    echo "<p><strong>Nombre:</strong> " . $_POST["nombre"] . "</p>";
+    echo "<p><strong>Email:</strong> " . $_POST["email"] . "</p>";
+    echo "<p><strong>Nivel de estudios:</strong> " . $_POST["estudios"] . "</p>";
+
+    if (!empty($_POST["situacion"])) {
+        echo "<p><strong>Situación actual:</strong> " . implode(", ", $_POST["situacion"]) . "</p>";
     }
-    
-    if($_SERVER['REQUEST_METHOD'] == 'POST'){
-        if(!validaRequerido($nombre)){
-            $errores[] ="El campo nombre es obligatorio";
-        } else {
-            echo "Tu nombre es: ".$nombre."<br>";
+
+    echo "<p><strong>Hobbies:</strong> ";
+    if (!empty($_POST["hobbies"])) {
+        $hobbies = $_POST["hobbies"];
+        foreach ($hobbies as $hobby) {
+            echo $hobby . ", ";
         }
+    }
+    if (!empty($_POST["otro_hobby"])) {
+        echo $_POST["otro_hobby"];
+    }
+    echo "</p>";
+} else {
+    echo "<p>Por favor, regrese al <a href='ejercicio23.php'>formulario</a> y complete la información.</p>";
+}
+    if (
+        empty($_SESSION["nombre"]) && empty($_SESSION["email"]) && empty($_SESSION["estudios"])
+        && empty($_SESSION["situacion"]) && empty($_SESSION["hobbies"])
+    ) {
+        $_SESSION["nombre"] = $_POST["nombre"];
+        $_SESSION["email"] = $_POST["email"];
+        $_SESSION["estudios"] = $_POST["estudios"];
+        $_SESSION["situacion"] = $_POST["situacion"];
+        $_SESSION["hobbies"] = $_POST["hobbies"];
+        
+    } else {
+        $_SESSION["nombre2"]  = $_SESSION["nombre"];
+        $_SESSION["nombre"] = $_POST["nombre"];
 
-        if(!validaRequerido($apellidos)){
-            $errores[] ="El campo apellidos es obligatorio";
-        } else {
-            echo "Tu/s apellido/s es/son: ".$apellidos."<br>";
-        }
+        $_SESSION["email2"]  = $_SESSION["email"];
+        $_SESSION["email"] = $_POST["email"];
 
-        $nivelesEstudios = ['sin estudios', 'primaria', 'secundaria', 'universitario'];
-        if (!in_array($estudios, $nivelesEstudios)) {
-            $errores[] = 'Selecciona un nivel de estudios válido.';
-        } else {
-            echo "Tu nivel de estudios es: ".$estudios."<br>";
-        }
+        $_SESSION["estudios2"]  = $_SESSION["estudios"];
+        $_SESSION["estudios"] = $_POST["estudios"];
 
-        if(!validarCheckbox($situacion)){
-            $errores[]="Seleciona almenos una opcion";
-        } else {
-            echo "La situación en la que te encuentras actualmente es: ".implode(", ",$situacion)."<br>";
-        }
+        $_SESSION["situacion2"]  = $_SESSION["situacion"];
+        $_SESSION["situacion"] = $_POST["situacion"];
 
-        if (in_array('otro', $hobbies) && empty($otroHobby)) {
-            $errores[] = 'Especifica un hobby en el campo Otro.';
-        } elseif (!validarCheckbox($hobbies)) {
-            $errores[] = 'Selecciona al menos un hobby.';
-        } else {
-            echo "Tus hobbies son: ".implode(", ",$hobbies)."<br>";
-        }
-        if (
-            empty($_SESSION["nombre"]) && empty($_SESSION["apellidos"]) && empty($_SESSION["estudios"])
-            && empty($_SESSION["trabajo"]) && empty($_SESSION["hobbies"])
-        ) {
-            $_SESSION["nombre"] = $_POST["nombre"];
-            $_SESSION["apellidos"] = $_POST["apellidos"];
-            $_SESSION["estudios"] = $_POST["estudios"];
-            $_SESSION["situacion"] = $_POST["situacion"];
-            $_SESSION["hobbies"] = $_POST["hobbies"];
-            
-        } else {
-            $_SESSION["nombreAntiguo"]  = $_SESSION["nombre"];
-            $_SESSION["nombre"] = $_POST["nombre"];
+        $_SESSION["hobbies2"]  = $_SESSION["hobbies"];
+        $_SESSION["hobbies"] = $_POST["hobbies"];
+        echo "El dato introducido es: ", $_SESSION['nombre2'] . "-" . $_SESSION['email2'] . "-" . $_SESSION['estudios2'] . "-" . implode(", ", $_SESSION['situacion2']).
+"-" . implode(", ", $_SESSION['hobbies2']);
 
-            $_SESSION["apellidosAntiguo"]  = $_SESSION["apellidos"];
-            $_SESSION["apellidos"] = $_POST["apellidos"];
-
-            $_SESSION["estudiosAntiguo"]  = $_SESSION["estudios"];
-            $_SESSION["estudios"] = $_POST["estudios"];
-
-            $_SESSION["trabajoAntiguo"]  = $_SESSION["trabajo"];
-            $_SESSION["trabajo"] = $_POST["trabajo"];
-
-            $_SESSION["hobbiesAntiguo"]  = $_SESSION["hobbies"];
-            $_SESSION["hobbies"] = $_POST["hobbies"];
-
-        }
-        if(isset($_POST['enviar'])){
-            header('Location: ejercicio11mostrar.php');
-        }
     }
 ?>
 <!DOCTYPE html>
-<html lang="es">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=+, initial-scale=1.0">
-    <title>Adrián Oriola</title>
+    <title>Ejercicio 11</title>
 </head>
 <body>
-  <?php if ($errores): ?>
-        <ul style="color: #f00;">
-            <?php foreach ($errores as $error): ?>
-                <li><?php echo $error ?></li>
-            <?php endforeach; ?>
-        </ul>
-    <?php endif;  ?>
-    <form action="ejercicio11.php" method="post">
+    <h2>Formulario - Página 1</h2>
+    <form method="post" action="ejercicio11.php">
         <label for="nombre">Nombre:</label>
-        <input type="text" name="nombre" value="<?php echo $nombre; ?>"></br>
-        <label for="apellidos">Apellidos:</label>
-        <input type="text" name="apellidos" value="<?php echo $apellidos; ?>"><br>
-        <label for="nivel_estudios">Nivel de estudios:</label>
+        <input type="text" name="nombre" required><br><br>
+
+        <label for="email">Email:</label>
+        <input type="email" name="email" required><br><br>
+
+        <label for="estudios">Nivel de estudios:</label>
         <select name="estudios">
-            <option value="sin estudios" <?php echo ($estudios == "sin estudios") ? "selected" :"" ?>>sin estudios</option>
-            <option value="primaria" <?php echo($estudios == "primaria") ? "selected" :"" ?>>primaria</option>
-            <option value="secundaria" <?php echo($estudios == "secundaria") ? "selected" :"" ?>>secundaria</option>
-            <option value="universidad" <?php echo($estudios == "universidad") ? "selected" :"" ?>>universidad</option>
-        </select></br>
-        <label for="situacion">Situacion</label></br>
-        <select name="situacion[]" multiple>
-            <option value="estudiando" <?php echo in_array('estudiando', $situacion) ? 'selected' : ''; ?>>Estudiando</option>
-            <option value="trabajando" <?php echo in_array('trabajando', $situacion) ? 'selected' : ''; ?>>Trabajando</option>
-            <option value="buscando_empleo" <?php echo in_array('buscando_empleo', $situacion) ? 'selected' : ''; ?>>Buscando Empleo</option>
-            <option value="desempleado" <?php echo in_array('desempleado', $situacion) ? 'selected' : ''; ?>>Desempleado</option>
-        </select></br>
+            <option value="primaria">Primaria</option>
+            <option value="secundaria">Secundaria</option>
+            <option value="universidad">Universidad</option>
+        </select><br><br>
 
-        <label>Hobbies:</label><br />
-        <input type="checkbox" name="hobbies[]" value="deportes" <?php echo in_array('deportes', $hobbies) ? 'checked' : ''; ?>> Deportes<br/>
-        <input type="checkbox" name="hobbies[]" value="lectura" <?php echo in_array('lectura', $hobbies) ? 'checked' : ''; ?>> Lectura<br/>
-        <input type="checkbox" name="hobbies[]" value="viajes" <?php echo in_array('viajes', $hobbies) ? 'checked' : ''; ?>> Viajes<br/>
-        <input type="checkbox" name="hobbies[]" value="otro" <?php echo in_array('otro', $hobbies) ? 'checked' : ''; ?>> Otro (Especificar):<br/>
-        <input type="text" name="otro_hobby" value="<?php echo htmlspecialchars($otroHobby) ?>"><br />
+        <label for="situacion">Situación actual:</label><br>
+        <input type="checkbox" name="situacion[]" value="estudiando"> Estudiando<br>
+        <input type="checkbox" name="situacion[]" value="trabajando"> Trabajando<br>
+        <input type="checkbox" name="situacion[]" value="buscando_empleo"> Buscando empleo<br>
+        <input type="checkbox" name="situacion[]" value="desempleado"> Desempleado<br><br>
 
-    <input type="submit" value="Enviar" name="enviar"/>
+        <label for="hobbies[]">Hobbies:</label><br>
+        <input type="checkbox" name="hobbies[]" value="deporte"> Deporte<br>
+        <input type="checkbox" name="hobbies[]" value="lectura"> Lectura<br>
+        <input type="checkbox" name="hobbies[]" value="viajes"> Viajes<br>
+        <input type="checkbox" name="hobbies[]" value="otro"> Otro:
+        <input type="text" name="otro_hobby"><br><br>
+
+        <input type="submit" value="Siguiente">
     </form>
 </body>
 </html>
